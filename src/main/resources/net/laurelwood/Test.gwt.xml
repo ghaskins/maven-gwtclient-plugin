@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module rename-to='Test'>
+	<!-- Inherit the core Web Toolkit stuff. -->
+	<!-- Inherit the core Web Toolkit stuff. -->
+	<inherits name='com.google.gwt.user.User' />
+	<inherits name="com.google.gwt.core.Core" />
+	<inherits name="com.google.gwt.user.History" />
+	<inherits name="com.google.gwt.i18n.I18N" />
+	<inherits name="com.google.gwt.json.JSON" />
+
+	<inherits name="com.google.gwt.event.Event" />
+	<inherits name="com.google.gwt.xml.XML" />
+
+	<!-- The Spiffy UI Modules -->
+	<inherits name="org.spiffyui.spiffyui" />
+
+	<!-- Inherit the default GWT style sheet. You can change -->
+	<!-- the theme of your GWT application by uncommenting -->
+	<!-- any one of the following lines. -->
+	<inherits name='com.google.gwt.user.theme.standard.Standard' />
+	<!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
+	<!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/> -->
+
+	<!-- Other module inherits -->
+
+	<!-- Specify the app entry point class. -->
+	<entry-point class='net.laurelwood.client.Index' />
+
+	<!-- Specify the paths for translatable code -->
+	<source path='client' />
+
+</module>
