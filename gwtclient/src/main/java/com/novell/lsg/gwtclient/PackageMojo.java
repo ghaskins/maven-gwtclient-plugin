@@ -16,74 +16,134 @@ package com.novell.lsg.gwtclient;
  * limitations under the License.
  */
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-
 /**
  * Goal which packages a GWT client into an archive
- *
+ * 
  * @goal package
  * 
  * @phase package
  */
-public class PackageMojo
-    extends AbstractMojo
-{
+public class PackageMojo extends AbstractMojo {
 
-    /**
-     * Location of the file.
-     * @parameter expression="${project.build.directory}"
-     * @required
-     */
-    private File outputDirectory;
-    
-    /**
-     * Name of archive
-     * @parameter expression="${project.build.finalName}.gwtclient"
-     * @required
-     */
-    private String archiveName;
-    
-    public void execute()
-        throws MojoExecutionException
-    {
-        File f = outputDirectory;
+	/**
+	 * The directory to archive
+	 * 
+	 * @parameter expression="${project.build.directory}/${project.build.finalName}"
+	 * @required
+	 */
+	private File m_directory;
+	
+	/**
+	 * Location of the file.
+	 * 
+	 * @parameter expression="${project.build.directory}"
+	 * @required
+	 */
+	private File m_outputDirectory;
 
-        if ( !f.exists() )
-        {
-            f.mkdirs();
-        }
+	/**
+	 * Name of archive
+	 * 
+	 * @parameter expression="${project.build.finalName}.gwtclient"
+	 * @required
+	 */
+	private String m_archiveName;
 
-        File touch = new File( f, archiveName);
+	public void execute() throws MojoExecutionException {
+		validateDirectory();
+		List<File> files = getFileListing(m_directory);
+		
+		File f = m_outputDirectory;
 
-        FileWriter w = null;
-        try
-        {
-            w = new FileWriter( touch );
+		if (!f.exists()) {
+			f.mkdirs();
+		}
 
-            w.write( "touch.txt" );
-        }
-        catch ( IOException e )
-        {
-            throw new MojoExecutionException( "Error creating file " + touch, e );
-        }
-        finally
-        {
-            if ( w != null )
-            {
-                try
-                {
-                    w.close();
-                }
-                catch ( IOException e )
-                {
-                    // ignore
-                }
-            }
-        }
-    }
+		File archive = new File(f, m_archiveName);
+
+		FileOutputStream os = null;
+		TarArchiveOutputStream tar = null;
+		try {
+			os = new FileOutputStream(archive);
+			tar = new TarArchiveOutputStream(os);
+			
+			for(File file : files) {
+				String          localname = file.getAbsolutePath().substring(m_directory.toString().length()+1);
+				TarArchiveEntry entry     = new TarArchiveEntry(file, localname);
+				
+				entry.setSize(file.length());
+				tar.putArchiveEntry(entry);				
+			}
+		} catch (IOException e) {
+			throw new MojoExecutionException("Error creating file " + archive, e);
+		} finally {
+			if (tar != null) {
+				try {
+					tar.close();
+				} catch (IOException e) {
+					// ignore
+				}
+			}
+			if (os != null) {
+				try {
+					os.close();
+				} catch (IOException e) {
+					// ignore
+				}
+			}
+		}
+	}
+
+	static private List<File> getFileListing(File path)
+			throws MojoExecutionException {
+		List<File> result = new ArrayList<File>();
+		File[] filesAndDirs = path.listFiles();
+		List<File> filesDirs = Arrays.asList(filesAndDirs);
+		for (File file : filesDirs) {
+			result.add(file); // always add, even if directory
+			if (!file.isFile()) {
+				// must be a directory
+				// recursive call!
+				List<File> deeperList = getFileListing(file);
+				result.addAll(deeperList);
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Directory is valid if it exists, does not represent a file, and can be
+	 * read.
+	 */
+	private void validateDirectory()
+			throws MojoExecutionException {
+		if (m_directory == null) {
+			throw new IllegalArgumentException("Directory should not be null.");
+		}
+		if (!m_directory.exists()) {
+			throw new MojoExecutionException("Directory does not exist: "
+					+ m_directory);
+		}
+		if (!m_directory.isDirectory()) {
+			throw new IllegalArgumentException("Is not a directory: "
+					+ m_directory);
+		}
+		if (!m_directory.canRead()) {
+			throw new IllegalArgumentException("Directory cannot be read: "
+					+ m_directory);
+		}
+	}
+
 }
