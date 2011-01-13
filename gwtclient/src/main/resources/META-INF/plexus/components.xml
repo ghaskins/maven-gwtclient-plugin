@@ -4,24 +4,44 @@
 		<component>
 			<role>org.apache.maven.lifecycle.mapping.LifecycleMapping</role>
 			<role-hint>gwtclient</role-hint>
-			<implementation>org.apache.maven.lifecycle.mapping.DefaultLifecycleMapping</implementation>
+			<implementation>org.apache.maven.lifecycle.mapping.DefaultLifecycleMapping
+			</implementation>
 			<configuration>
 				<lifecycles>
 					<lifecycle>
 						<id>default</id>
 						<phases>
-							<process-resources>org.apache.maven.plugins:maven-resources-plugin:resources</process-resources>
-							<compile>org.apache.maven.plugins:maven-compiler-plugin:compile</compile>
-							<process-test-resources>org.apache.maven.plugins:maven-resources-plugin:testResources</process-test-resources>
-							<test-compile>org.apache.maven.plugins:maven-compiler-plugin:testCompile</test-compile>
+							<process-resources>org.apache.maven.plugins:maven-resources-plugin:resources
+							</process-resources>
+							<compile>org.codehaus.mojo:gwt-maven-plugin:compile</compile>
+							<process-test-resources>org.apache.maven.plugins:maven-resources-plugin:testResources
+							</process-test-resources>
+							<test-compile>org.apache.maven.plugins:maven-compiler-plugin:testCompile
+							</test-compile>
 							<test>org.apache.maven.plugins:maven-surefire-plugin:test</test>
+							<!-- <pre-package>org.apache.maven.plugins:maven-war-plugin:war</pre-package> -->
 							<package>com.novell.lsg:maven-gwtclient-plugin:package</package>
-							<install>org.apache.maven.plugins:maven-install-plugin:install</install>
-							<deploy>org.apache.maven.plugins:maven-deploy-plugin:deploy</deploy>
+							<install>org.apache.maven.plugins:maven-install-plugin:install
+							</install>
+							<deploy>org.apache.maven.plugins:maven-deploy-plugin:deploy
+							</deploy>
 						</phases>
 					</lifecycle>
 				</lifecycles>
 			</configuration>
 		</component>
+		<component>
+			<role>org.apache.maven.artifact.handler.ArtifactHandler</role>
+			<role-hint>gwtclient</role-hint>
+			<implementation>org.apache.maven.artifact.handler.DefaultArtifactHandler
+			</implementation>
+			<configuration>
+				<type>gwtclient</type>
+				<extension>war</extension>
+				<language>javascript</language>
+				<addedToClasspath>false</addedToClasspath>
+			</configuration>
+		</component>
+
 	</components>
 </component-set>

@@ -33,13 +33,7 @@ import java.io.IOException;
 public class PackageMojo
     extends AbstractMojo
 {
-	/**
-	 * Directory to archive
-	 * @parameter expression="${project.build.directory}/${project.build.finalName}"
-	 * @required
-	 */
-	private File directory;
-	
+
     /**
      * Location of the file.
      * @parameter expression="${project.build.directory}"

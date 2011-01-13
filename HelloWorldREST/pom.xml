@@ -16,7 +16,6 @@
 		<!-- GWT needs at least java 1.5 -->
 		<maven.compiler.source>1.5</maven.compiler.source>
 		<maven.compiler.target>1.5</maven.compiler.target>
-		<webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
 	</properties>
 
 	<dependencies>
@@ -42,28 +41,9 @@
 
 	<build>
 		<!-- Generate compiled stuff in the folder used for developing mode -->
-		<outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory>
+		<outputDirectory>${project.build.directory}/${project.build.finalName}</outputDirectory>
 
 		<plugins>
-
-			<!-- GWT Maven Plugin -->
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>gwt-maven-plugin</artifactId>
-				<version>2.1.0-1</version>
-				<executions>
-					<execution>
-						<phase>compile</phase>
-						<goals>
-							<goal>compile</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<runTarget>Test.html</runTarget>
-					<hostedWebapp>${webappDirectory}</hostedWebapp>
-				</configuration>
-			</plugin>
 			<plugin>
 				<groupId>com.novell.lsg</groupId>
 				<artifactId>maven-gwtclient-plugin</artifactId>
