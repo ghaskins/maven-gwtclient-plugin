@@ -84,7 +84,7 @@ public class PackageMojo extends AbstractMojo {
 				String          localname = file.getAbsolutePath().substring(m_directory.toString().length()+1);
 				TarArchiveEntry entry     = new TarArchiveEntry(file, localname);
 				
-				getLog().info("adding " + localname);
+				getLog().debug("adding " + localname);
 				
 				tar.putArchiveEntry(entry);
 				
