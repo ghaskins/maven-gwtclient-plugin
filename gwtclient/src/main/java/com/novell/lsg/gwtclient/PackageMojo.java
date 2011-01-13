@@ -28,6 +28,7 @@ import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.project.MavenProject;
 
 /**
  * Goal which packages a GWT client into an archive
@@ -39,13 +40,23 @@ import org.apache.maven.plugin.MojoExecutionException;
 public class PackageMojo extends AbstractMojo {
 
 	/**
+	 * The maven project.
+	 * 
+	 * @parameter expression="${project}"
+	 * @required
+	 * @readonly
+	 */
+	protected MavenProject project;
+
+	/**
 	 * The directory to archive
 	 * 
-	 * @parameter expression="${project.build.directory}/${project.build.finalName}"
+	 * @parameter 
+	 *            expression="${project.build.directory}/${project.build.finalName}"
 	 * @required
 	 */
 	private File m_directory;
-	
+
 	/**
 	 * Location of the file.
 	 * 
@@ -61,11 +72,11 @@ public class PackageMojo extends AbstractMojo {
 	 * @required
 	 */
 	private String m_archiveName;
-	
+
 	public void execute() throws MojoExecutionException {
 		validateDirectory();
 		List<File> files = getFileListing(m_directory);
-		
+
 		File f = m_outputDirectory;
 
 		if (!f.exists()) {
@@ -78,40 +89,43 @@ public class PackageMojo extends AbstractMojo {
 		TarArchiveOutputStream tar = null;
 		try {
 			byte[] buf = new byte[4 * 1024];
-			
+
 			os = new FileOutputStream(archive);
 			tar = new TarArchiveOutputStream(os);
-	
-			for(File file : files) {
-				String          localname = file.getAbsolutePath().substring(m_directory.toString().length()+1);
-				TarArchiveEntry entry     = new TarArchiveEntry(file, localname);
-				
+
+			for (File file : files) {
+				String localname = file.getAbsolutePath().substring(
+						m_directory.toString().length() + 1);
+				TarArchiveEntry entry = new TarArchiveEntry(file, localname);
+
 				getLog().debug("adding " + localname);
-				
+
 				tar.putArchiveEntry(entry);
-				
+
 				if (file.isFile() && file.length() != 0) {
 					FileInputStream is = null;
-					
+
 					try {
 						int bytesread;
-						
-						is  = new FileInputStream(file);
-					
-						while((bytesread = is.read(buf)) != -1) {
+
+						is = new FileInputStream(file);
+
+						while ((bytesread = is.read(buf)) != -1) {
 							tar.write(buf, 0, bytesread);
 						}
 					} catch (Exception e) {
-						throw new MojoExecutionException("Error reading file + " );
+						throw new MojoExecutionException(
+								"Error reading file + ");
 					} finally {
 						is.close();
 					}
 				}
-				
+
 				tar.closeArchiveEntry();
 			}
 		} catch (IOException e) {
-			throw new MojoExecutionException("Error creating file " + archive, e);
+			throw new MojoExecutionException("Error creating file " + archive,
+					e);
 		} finally {
 			if (tar != null) {
 				try {
@@ -120,7 +134,7 @@ public class PackageMojo extends AbstractMojo {
 					// ignore
 				}
 			}
-			
+
 			if (os != null) {
 				try {
 					os.close();
@@ -129,6 +143,8 @@ public class PackageMojo extends AbstractMojo {
 				}
 			}
 		}
+		
+		project.getArtifact().setFile(archive);
 	}
 
 	static private List<File> getFileListing(File path)
@@ -152,8 +168,7 @@ public class PackageMojo extends AbstractMojo {
 	 * Directory is valid if it exists, does not represent a file, and can be
 	 * read.
 	 */
-	private void validateDirectory()
-			throws MojoExecutionException {
+	private void validateDirectory() throws MojoExecutionException {
 		if (m_directory == null) {
 			throw new IllegalArgumentException("Directory should not be null.");
 		}
