@@ -17,6 +17,7 @@ package com.novell.lsg.gwtclient;
  */
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -60,7 +61,7 @@ public class PackageMojo extends AbstractMojo {
 	 * @required
 	 */
 	private String m_archiveName;
-
+	
 	public void execute() throws MojoExecutionException {
 		validateDirectory();
 		List<File> files = getFileListing(m_directory);
@@ -83,19 +84,41 @@ public class PackageMojo extends AbstractMojo {
 				String          localname = file.getAbsolutePath().substring(m_directory.toString().length()+1);
 				TarArchiveEntry entry     = new TarArchiveEntry(file, localname);
 				
-				entry.setSize(file.length());
-				tar.putArchiveEntry(entry);				
+				getLog().info("adding " + localname);
+				
+				tar.putArchiveEntry(entry);
+				
+				if (file.isFile() && file.length() != 0) {
+					FileInputStream is = null;
+					
+					try {
+						is  = new FileInputStream(file);
+						byte[]          buf = new byte[4 * 1024];
+						int             bytesread;
+					
+						while((bytesread = is.read(buf)) != -1) {
+							tar.write(buf, 0, bytesread);
+						}
+					} catch (Exception e) {
+						throw new MojoExecutionException("Error reading file + " );
+					} finally {
+						is.close();
+					}
+				}
+				
+				tar.closeArchiveEntry();
 			}
 		} catch (IOException e) {
 			throw new MojoExecutionException("Error creating file " + archive, e);
 		} finally {
 			if (tar != null) {
 				try {
-					tar.close();
+					tar.flush();
 				} catch (IOException e) {
 					// ignore
 				}
 			}
+			
 			if (os != null) {
 				try {
 					os.close();
