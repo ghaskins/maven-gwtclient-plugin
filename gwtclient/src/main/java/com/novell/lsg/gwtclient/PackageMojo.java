@@ -77,9 +77,11 @@ public class PackageMojo extends AbstractMojo {
 		FileOutputStream os = null;
 		TarArchiveOutputStream tar = null;
 		try {
+			byte[] buf = new byte[4 * 1024];
+			
 			os = new FileOutputStream(archive);
 			tar = new TarArchiveOutputStream(os);
-			
+	
 			for(File file : files) {
 				String          localname = file.getAbsolutePath().substring(m_directory.toString().length()+1);
 				TarArchiveEntry entry     = new TarArchiveEntry(file, localname);
@@ -92,9 +94,9 @@ public class PackageMojo extends AbstractMojo {
 					FileInputStream is = null;
 					
 					try {
+						int bytesread;
+						
 						is  = new FileInputStream(file);
-						byte[]          buf = new byte[4 * 1024];
-						int             bytesread;
 					
 						while((bytesread = is.read(buf)) != -1) {
 							tar.write(buf, 0, bytesread);
