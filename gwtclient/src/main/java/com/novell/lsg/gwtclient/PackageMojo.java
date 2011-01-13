@@ -33,13 +33,27 @@ import java.io.IOException;
 public class PackageMojo
     extends AbstractMojo
 {
+	/**
+	 * Directory to archive
+	 * @parameter expression="${project.build.directory}/${project.build.finalName}"
+	 * @required
+	 */
+	private File directory;
+	
     /**
      * Location of the file.
      * @parameter expression="${project.build.directory}"
      * @required
      */
     private File outputDirectory;
-
+    
+    /**
+     * Name of archive
+     * @parameter expression="${project.build.finalName}.gwtclient"
+     * @required
+     */
+    private String archiveName;
+    
     public void execute()
         throws MojoExecutionException
     {
@@ -50,7 +64,7 @@ public class PackageMojo
             f.mkdirs();
         }
 
-        File touch = new File( f, "touch.txt" );
+        File touch = new File( f, archiveName);
 
         FileWriter w = null;
         try
