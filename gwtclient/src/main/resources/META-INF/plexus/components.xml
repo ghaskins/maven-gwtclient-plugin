@@ -30,18 +30,5 @@
 				</lifecycles>
 			</configuration>
 		</component>
-		<component>
-			<role>org.apache.maven.artifact.handler.ArtifactHandler</role>
-			<role-hint>gwtclient</role-hint>
-			<implementation>org.apache.maven.artifact.handler.DefaultArtifactHandler
-			</implementation>
-			<configuration>
-				<type>gwtclient</type>
-				<extension>war</extension>
-				<language>javascript</language>
-				<addedToClasspath>false</addedToClasspath>
-			</configuration>
-		</component>
-
 	</components>
 </component-set>
