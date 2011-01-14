@@ -27,10 +27,10 @@
 									<artifactId>client</artifactId>
 									<version>0.0.1-SNAPSHOT</version>
 									<type>gwtclient</type>
-									<outputDirectory>${project.build.directory}/priv</outputDirectory>
+									<outputDirectory>${project.build.directory}/priv/webapp</outputDirectory>
 								</artifactItem>
 							</artifactItems>
-							<outputDirectory>${project.build.directory}/priv</outputDirectory>
+							<outputDirectory>${project.build.directory}/priv/webapp</outputDirectory>
 						</configuration>
 					</execution>
 				</executions>
