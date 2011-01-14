@@ -1,0 +1,20 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.novell.lsg.gwtclient.example</groupId>
+  <artifactId>server</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>erlang-otp</packaging>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>eu.lindenbaum</groupId>
+        <artifactId>maven-erlang-plugin</artifactId>
+        <version>1.0.0-beta</version>
+        <extensions>true</extensions>
+	<configuration>
+	  <skipDialyzer>true</skipDialyzer>
+	</configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project> 

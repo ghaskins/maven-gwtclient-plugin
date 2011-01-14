@@ -8,5 +8,6 @@
   <modules>
     <module>maven-gwtclient-plugin</module>
     <module>example-client</module>
+    <module>example-server</module>
   </modules>
 </project>
