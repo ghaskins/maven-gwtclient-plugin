@@ -6,6 +6,7 @@
 	<artifactId>maven-gwtclient-plugin</artifactId>
 	<packaging>maven-plugin</packaging>
 	<name>maven-gwtclient-plugin</name>
+	<version>1.1-SNAPSHOT</version>
 	
 	<distributionManagement>
 	  <!-- Publish the versioned releases here -->
@@ -28,7 +29,6 @@
 		<maven.compiler.target>1.6</maven.compiler.target>
 	</properties>
 
-	<version>1.0</version>
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.maven</groupId>
