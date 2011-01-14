@@ -17,18 +17,11 @@ package com.novell.lsg.gwtclient;
  */
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
-import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
-import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.archiver.tar.TarArchiver;
 
 /**
  * Goal which packages a GWT client into an archive
@@ -73,9 +66,24 @@ public class PackageMojo extends AbstractMojo {
 	 */
 	private String m_archiveName;
 
+	/**
+	 * Whether creating the archives should be forced.
+	 * 
+	 * @parameter expression="${gwtclient.forceCreation}" default-value="false"
+	 */
+	private boolean m_forceCreation;
+
+	/**
+	 * The archiver.
+	 * 
+	 * @parameter 
+	 *            expression="${component.org.codehaus.plexus.archiver.Archiver#tar}"
+	 * @required
+	 */
+	private TarArchiver m_archiver;
+
 	public void execute() throws MojoExecutionException {
 		validateDirectory();
-		List<File> files = getFileListing(m_directory);
 
 		File f = m_outputDirectory;
 
@@ -85,83 +93,18 @@ public class PackageMojo extends AbstractMojo {
 
 		File archive = new File(f, m_archiveName);
 
-		FileOutputStream os = null;
-		TarArchiveOutputStream tar = null;
 		try {
-			byte[] buf = new byte[4 * 1024];
-
-			os = new FileOutputStream(archive);
-			tar = new TarArchiveOutputStream(os);
-
-			for (File file : files) {
-				String localname = file.getAbsolutePath().substring(
-						m_directory.toString().length() + 1);
-				TarArchiveEntry entry = new TarArchiveEntry(file, localname);
-
-				getLog().debug("adding " + localname);
-
-				tar.putArchiveEntry(entry);
-
-				if (file.isFile() && file.length() != 0) {
-					FileInputStream is = null;
-
-					try {
-						int bytesread;
-
-						is = new FileInputStream(file);
-
-						while ((bytesread = is.read(buf)) != -1) {
-							tar.write(buf, 0, bytesread);
-						}
-					} catch (Exception e) {
-						throw new MojoExecutionException(
-								"Error reading file + ");
-					} finally {
-						is.close();
-					}
-				}
-
-				tar.closeArchiveEntry();
-			}
-		} catch (IOException e) {
-			throw new MojoExecutionException("Error creating file " + archive,
-					e);
-		} finally {
-			if (tar != null) {
-				try {
-					tar.flush();
-				} catch (IOException e) {
-					// ignore
-				}
-			}
-
-			if (os != null) {
-				try {
-					os.close();
-				} catch (IOException e) {
-					// ignore
-				}
-			}
+			//m_archiver.setCompression(TarArchiver.TarCompressionMethod.);
+			m_archiver.setForced(m_forceCreation);
+			m_archiver.setDestFile(archive);
+			m_archiver.addDirectory(m_directory);
+			m_archiver.createArchive();
+		} catch (Exception e) {
+			throw new MojoExecutionException("Archive creation exception "
+					+ e.getMessage());
 		}
-		
+
 		project.getArtifact().setFile(archive);
-	}
-
-	static private List<File> getFileListing(File path)
-			throws MojoExecutionException {
-		List<File> result = new ArrayList<File>();
-		File[] filesAndDirs = path.listFiles();
-		List<File> filesDirs = Arrays.asList(filesAndDirs);
-		for (File file : filesDirs) {
-			result.add(file); // always add, even if directory
-			if (!file.isFile()) {
-				// must be a directory
-				// recursive call!
-				List<File> deeperList = getFileListing(file);
-				result.addAll(deeperList);
-			}
-		}
-		return result;
 	}
 
 	/**
