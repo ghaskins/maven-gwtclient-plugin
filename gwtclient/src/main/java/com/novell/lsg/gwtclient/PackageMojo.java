@@ -22,6 +22,7 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.archiver.tar.TarArchiver;
+import org.codehaus.plexus.archiver.tar.TarArchiver.TarCompressionMethod;
 
 /**
  * Goal which packages a GWT client into an archive
@@ -94,7 +95,11 @@ public class PackageMojo extends AbstractMojo {
 		File archive = new File(f, m_archiveName);
 
 		try {
-			//m_archiver.setCompression(TarArchiver.TarCompressionMethod.);
+			TarCompressionMethod method = new TarCompressionMethod();
+			
+			method.setValue("bzip2");
+			
+			m_archiver.setCompression(method);
 			m_archiver.setForced(m_forceCreation);
 			m_archiver.setDestFile(archive);
 			m_archiver.addDirectory(m_directory);
