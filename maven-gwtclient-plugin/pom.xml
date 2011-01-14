@@ -6,6 +6,22 @@
 	<artifactId>maven-gwtclient-plugin</artifactId>
 	<packaging>maven-plugin</packaging>
 	<name>maven-gwtclient-plugin</name>
+	
+	<distributionManagement>
+	  <!-- Publish the versioned releases here -->
+	  <repository>
+	    <id>nexus</id>
+	    <name>nexus</name>
+	    <url>dav:http://151.155.230.64:8081/nexus/content/repositories/releases</url>
+	  </repository>
+	  
+	  <!-- Publish the versioned releases here -->
+	  <snapshotRepository>
+	    <id>nexus</id>
+	    <name>nexus</name>
+	    <url>dav:http://151.155.230.64:8081/nexus/content/repositories/snapshots</url>
+	  </snapshotRepository>
+	</distributionManagement>
 
 	<properties>
 		<maven.compiler.source>1.6</maven.compiler.source>
