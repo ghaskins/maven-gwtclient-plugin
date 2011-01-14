@@ -4,18 +4,16 @@
 
 	<!-- POM file generated with GWT webAppCreator -->
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>net.laurelwood</groupId>
-	<artifactId>HelloWorldREST</artifactId>
+	<groupId>com.novell.lsg</groupId>
+	<artifactId>example-client</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>gwtclient</packaging>
-	<name>SpiffyUI :: HelloWorldREST :: Maven Edition</name>
+	<name>Example Client :: GWTCLIENT packaging</name>
 
 	<properties>
-		<!-- Convenience property to set the GWT version -->
-		<gwtVersion>2.1.0</gwtVersion>
 		<!-- GWT needs at least java 1.5 -->
-		<maven.compiler.source>1.5</maven.compiler.source>
-		<maven.compiler.target>1.5</maven.compiler.target>
+		<maven.compiler.source>1.6</maven.compiler.source>
+		<maven.compiler.target>1.6</maven.compiler.target>
 	</properties>
 
 	<dependencies>
