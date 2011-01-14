@@ -4,7 +4,7 @@
 
 	<!-- POM file generated with GWT webAppCreator -->
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.novell.lsg</groupId>
+	<groupId>com.novell.lsg.gwtclient</groupId>
 	<artifactId>example-client</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>gwtclient</packaging>
@@ -21,12 +21,6 @@
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-user</artifactId>
 			<version>2.1.0</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.novell</groupId>
-			<artifactId>spiffyui</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
