@@ -6,6 +6,9 @@
 %%% -------------------------------------------------------------------
 -module(example_server).
 
+-include_lib("yaws/include/yaws.hrl").
+-include_lib("yaws/include/yaws_api.hrl").
+
 -behaviour(gen_server).
 %% --------------------------------------------------------------------
 %% Include files
@@ -13,7 +16,7 @@
 
 %% --------------------------------------------------------------------
 %% External exports
--export([]).
+-export([start_link/0, out/1]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
@@ -23,7 +26,11 @@
 %% ====================================================================
 %% External functions
 %% ====================================================================
+start_link() ->
+    gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
 
+out(Arg) ->
+    [{status, 404}].
 
 %% ====================================================================
 %% Server functions
@@ -38,6 +45,22 @@
 %%          {stop, Reason}
 %% --------------------------------------------------------------------
 init([]) ->
+    PrivDir = code:priv_dir(example_server),
+
+    GC = yaws_config:make_default_gconf(false, "example"),
+    SC = #sconf{
+      port = 8001,
+      servername = "localhost",
+      listen = {0, 0, 0, 0},
+      docroot = PrivDir ++ "/webapp",
+      appmods = [{"/", ?MODULE}]
+    },
+
+    case catch yaws_api:setconf(GC, [[SC]]) of
+        ok -> {ok, started};
+        Error -> {stop, Error}
+    end,
+
     {ok, #state{}}.
 
 %% --------------------------------------------------------------------

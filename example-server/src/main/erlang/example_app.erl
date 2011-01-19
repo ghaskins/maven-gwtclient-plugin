@@ -44,7 +44,7 @@
 %%          {error, Reason}
 %% --------------------------------------------------------------------
 start(Type, StartArgs) ->
-    case example_sup:start_link(StartArgs) of
+    case example_sup:start_link() of
 	{ok, Pid} ->
 	    {ok, Pid};
 	Error ->

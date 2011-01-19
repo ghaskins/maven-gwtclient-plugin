@@ -1,0 +1,10 @@
+{application, ${ARTIFACT},
+  [{description, ${DESCRIPTION}},
+   {id, ${ID}},
+   {vsn, ${VERSION}},
+   {modules, ${MODULES}},
+   {registered, ${REGISTERED}},
+   {mod, {'example_app', []}},
+   {included_applications, []},
+   {applications, [sasl, yaws]},
+   {start_phases, []}]}.
