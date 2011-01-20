@@ -30,7 +30,48 @@ start_link() ->
     gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
 
 out(Arg) ->
-    ok.
+    Req = Arg#arg.req,
+    Headers = Arg#arg.headers,
+    ReqPath = string:tokens(Arg#arg.server_path, "/"),
+    Accepts = string:tokens(Headers#headers.accept, ","),
+    process(Req#http_request.method, Accepts, ReqPath, Arg).
+
+process(Cmd, [Accept | T], Request, Arg) ->
+    try
+	["api" | ReqPath] = Request, %% all paths should be prepended with /api
+	handle_request(Cmd, Accept, ReqPath, Arg)
+    catch
+        throw:nomatch -> process(Cmd, T, Request, Arg)
+    end;                                         
+process(Cmd, [], Request, Arg) ->
+    error_logger:info_msg("Ignoring ~p ~p (~p)~n",
+                          [Cmd, Request, Arg]),
+    make_response(404, "<p>Page not found</p>").
+
+handle_request('GET', "application/json", ["hello"], Arg) ->
+    P = yaws_api:parse_query(Arg),
+    case lists:keysearch("user", 1, P) of
+	{value, {"user", User}} ->
+	    make_response(200, "text/plain", "Hello, " ++ User);
+	BadResult ->
+	    io:format("Unexpected result: ~p from ~p~n", [BadResult, P]),
+	    make_response(404, "text/plain", "Missing ?user=$user")
+    end;
+
+handle_request(Cmd, Accept, Request, Arg) -> % catchall
+    throw(nomatch).
+
+make_response(Status, Message) ->
+    make_response(Status, "text/html", Message).
+
+make_response(Status, Type, Message) ->
+    make_all_response(Status, make_header(Type), Message).
+
+make_header(Type) ->
+    [{header, ["Content-Type: ", Type]}].
+
+make_all_response(Status, Headers, Message) ->
+    [{status, Status}, {allheaders, Headers}, {html, Message}].
 
 %% ====================================================================
 %% Server functions

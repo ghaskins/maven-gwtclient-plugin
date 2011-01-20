@@ -6,5 +6,5 @@
    {registered, ${REGISTERED}},
    {mod, {'example_app', []}},
    {included_applications, []},
-   {applications, [sasl, yaws]},
+   {applications, [sasl, yaws, mochijson]},
    {start_phases, []}]}.
