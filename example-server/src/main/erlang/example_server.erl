@@ -30,7 +30,7 @@ start_link() ->
     gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
 
 out(Arg) ->
-    [{status, 404}].
+    ok.
 
 %% ====================================================================
 %% Server functions
@@ -45,7 +45,7 @@ out(Arg) ->
 %%          {stop, Reason}
 %% --------------------------------------------------------------------
 init([]) ->
-    PrivDir = code:priv_dir(example_server),
+    PrivDir = code:priv_dir(server),
 
     GC = yaws_config:make_default_gconf(false, "example"),
     SC = #sconf{
@@ -53,7 +53,8 @@ init([]) ->
       servername = "localhost",
       listen = {0, 0, 0, 0},
       docroot = PrivDir ++ "/webapp",
-      appmods = [{"/", ?MODULE}]
+	  %% redirect_map = [{"/", #url{path="/example.html"}, noappend}],
+      appmods = [{"/api", ?MODULE}]
     },
 
     case catch yaws_api:setconf(GC, [[SC]]) of
