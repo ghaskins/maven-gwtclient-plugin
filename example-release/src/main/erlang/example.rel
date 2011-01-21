@@ -3,4 +3,4 @@
   {erts, ${ERTS}},
   [{kernel, ${KERNEL}}, 
    {stdlib, ${STDLIB}},
-   {sasl, ${SASL}] ++ ${APPLICATIONS}}.
+   {sasl, ${SASL}}] ++ ${APPLICATIONS}}.
