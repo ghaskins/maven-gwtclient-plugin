@@ -52,8 +52,9 @@ handle_request('GET', "application/json", ["hello"], Arg) ->
     P = yaws_api:parse_query(Arg),
     case lists:keysearch("user", 1, P) of
 	{value, {"user", User}} ->
-	    Agent = "agent",
-	    ServerInfo = "serverInfo",
+	    Headers = Arg#arg.headers,
+	    Agent = Headers#headers.user_agent,
+	    ServerInfo = "Erlang/Yaws",
 	    Message = {struct, [{user, User},
 				{userAgent, Agent},
 				{serverInfo, ServerInfo}]},
