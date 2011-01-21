@@ -52,7 +52,13 @@ handle_request('GET', "application/json", ["hello"], Arg) ->
     P = yaws_api:parse_query(Arg),
     case lists:keysearch("user", 1, P) of
 	{value, {"user", User}} ->
-	    make_response(200, "text/plain", "Hello, " ++ User);
+	    Agent = "agent",
+	    ServerInfo = "serverInfo",
+	    Message = {struct, [{user, User},
+				{userAgent, Agent},
+				{serverInfo, ServerInfo}]},
+	    EncodedMessage = mochijson:encode(Message),
+	    make_response(200, "application/json", EncodedMessage);
 	BadResult ->
 	    io:format("Unexpected result: ~p from ~p~n", [BadResult, P]),
 	    make_response(404, "text/plain", "Missing ?user=$user")
