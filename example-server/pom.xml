@@ -68,7 +68,6 @@
 	<extensions>true</extensions>
 	<configuration>
 	  <skipDialyzer>true</skipDialyzer>
-	  <compilerOptions>{i, "target/lib"}</compilerOptions>
 	</configuration>
       </plugin>
     </plugins>
