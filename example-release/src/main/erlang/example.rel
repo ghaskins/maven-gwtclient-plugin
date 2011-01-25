@@ -1,6 +1,4 @@
 {release,
   {${ARTIFACT}, ${VERSION}},
   {erts, ${ERTS}},
-  [{kernel, ${KERNEL}}, 
-   {stdlib, ${STDLIB}},
-   {sasl, ${SASL}}] ++ ${APPLICATIONS}}.
+  ${AUTODEPS}}.
