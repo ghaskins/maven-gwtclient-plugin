@@ -4,7 +4,7 @@
 
 	<!-- POM file generated with GWT webAppCreator -->
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.novell.lsg.gwtclient.example</groupId>
+	<groupId>com.github.ghaskins.gwtclient.example</groupId>
 	<artifactId>client</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>gwtclient</packaging>
@@ -50,7 +50,7 @@
 
 		<plugins>
 			<plugin>
-				<groupId>com.novell.lsg</groupId>
+				<groupId>com.github.ghaskins</groupId>
 				<artifactId>maven-gwtclient-plugin</artifactId>
 				<version>1.1-SNAPSHOT</version>
 				<extensions>true</extensions>
